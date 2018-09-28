@@ -1,0 +1,19 @@
+---
+title: "P8105 HW2 js5354"
+author: Jiayi Shen
+date: September 28, 2018
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+#Problem 1
+```{r}
+transit_data = read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
+
+```
+
+
