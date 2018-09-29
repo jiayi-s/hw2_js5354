@@ -5,14 +5,18 @@ date: September 28, 2018
 output: github_document
 ---
 
-```{r setup, include=FALSE}
+```{r setting_up_and_loading_libraries, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(dplyr)
 ```
 
 #Problem 1
-Loading the NYC Transit Subway Entrance and Exit Data:
-```{r loading_data}
+Loading the NYC Transit Subway Entrance and Exit Data:\
+
+```{r loading_NYC_transit_data}
+
+#Load and clean the NYC Transit Subway Entrance and Exit Data
 
 transit_data = 
   read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
@@ -22,7 +26,67 @@ transit_data =
 transit_data$entry = recode(transit_data$entry, "YES" = TRUE, "NO" =FALSE)
 
 ```
-Write a short paragraph about this dataset – explain briefly what variables the dataset contains, describe your data cleaning steps so far, and give the dimension (rows x columns) of the resulting dataset. Are these data tidy?
+
+This CSV file contains information related to some subway stations in NYC, including which line each station is for, the name of each station, the geographic coordinates of each station as well as its entrance(s), what is the N-S and W-E street that this station is located at, which route(s) each station serves, whether there is free crossover / vending entries / stuffing / ADA compliance facilitated with any station, whether the station has any entrance or it is exit only as well as the type of entrance. \
+\
+So far the csv file has been loaded and stored to `transit_data`; each column name has been transformed into lowercase letters with underscores in between; information with respect to line, station, name, station coordinates, routes served, entry, vending, entrance type, and ADA compliance have been retained. Then type of `entry` variables has been coerced into logical variables.\
+\
+Now the dataset contains 1868 entries of 19 variables. However, the dataset is not tidy enough. Especially there are a lot of "NA"s in column `route1:11`, which unnecessarily widens the data spreadsheet.
+
+##Question 1
+Identifying number of stations:
+```{r identifying number of stations}
+n_stations = nrow(distinct(transit_data, line, station_name))
+```
+There are 465 distinct stations in this NYC transit dataset. 
+
+
+##Question 2
+Identifying the number of stations with ADA:
+```{r identifying the number of stations with ADA}
+transit_data %>% 
+  filter(ada == TRUE) %>% 
+  distinct(line, station_name) %>% 
+  nrow()
+```
+84 stations are ADA compliant. 
+
+##Question 3
+Identifying proportion of station entrances / exits without vending allow entrance:
+```{r identifying proportion of station entrances / exits without vending allow entrance}
+
+transit_data %>% 
+  filter (vending == "NO", entry == TRUE) %>% 
+  distinct(line, station_name) %>% 
+  nrow() / n_stations
+transit_data %>% 
+  filter (vending == "NO", entry == FALSE) %>% 
+  distinct(line, station_name) %>% 
+  nrow() / n_stations
+```
+There are 9.24% of total stations in this dataset have entrances without vending allow entrance and 14.62% have exit-only doors without vending.
+
+##Question 4
+Reformat data so that route number and route name are distinct variables.
+```{r reformat to separate route number and route name}
+
+#reformat to separate route number and route name
+reformed_data = transit_data %>% 
+  gather(key = "route_number", value = "route_name", route1:route11)
+
+#identifying the number distinct stations serve the A train.
+reformed_data %>% 
+  filter (route_name == "A") %>% 
+  distinct(line, station_name) %>% 
+  nrow() 
+
+#identifying the number distinct stations serve the A train with ADA compliance.
+reformed_data %>% 
+  filter (route_name == "A", ada == TRUE) %>% 
+  distinct(line, station_name) %>% 
+  nrow() 
+```
+There are 60 stations serve the A train, of which 17 stations are ADA compliant.
 
 
 
