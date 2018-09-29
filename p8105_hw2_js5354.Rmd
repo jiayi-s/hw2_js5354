@@ -88,5 +88,21 @@ reformed_data %>%
 ```
 There are 60 stations serve the A train, of which 17 stations are ADA compliant.
 
+#Problem 2
+```{r reading Excel file and stroing into R environment}
+
+#reading Excel file and stroing into R environment
+trash_data = readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "Mr. Trash Wheel!A2:N258") %>% 
+  janitor::clean_names() 
+
+#omit rows that do not include dumpster-specific data
+trash_data = trash_data[!is.na(trash_data$dumpster), ]
+
+#rounds the number of sports balls to the nearest integer and converts the result to an integer variable 
+trash_data =
+  trash_data %>% 
+  mutate(sports_balls = round(sports_balls, digits = 0)) %>% 
+  mutate(sports_balls = as.integer(sports_balls))
+```
 
 
