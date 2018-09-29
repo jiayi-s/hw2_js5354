@@ -12,7 +12,7 @@ library(dplyr)
 ```
 
 #Problem 1
-Loading the NYC Transit Subway Entrance and Exit Data:\
+Loading the NYC Transit Subway Entrance and Exit Data:
 
 ```{r loading_NYC_transit_data}
 
@@ -89,7 +89,8 @@ reformed_data %>%
 There are 60 stations serve the A train, of which 17 stations are ADA compliant.
 
 #Problem 2
-```{r reading Excel file and stroing into R environment}
+Read and clean the Mr. Trash Wheel sheet:
+```{r reading Excel file and initial cleaning}
 
 #reading Excel file and stroing into R environment
 trash_data = readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "Mr. Trash Wheel!A2:N258") %>% 
@@ -104,5 +105,36 @@ trash_data =
   mutate(sports_balls = round(sports_balls, digits = 0)) %>% 
   mutate(sports_balls = as.integer(sports_balls))
 ```
+
+Read and clean precipitation data for 2016 and 2017. 
+```{r initial reading and cleaning of precipitation data for 2016 and 2017}
+
+#read precipitation data for 2016 and 2017 and omit rows without precipitation data
+
+precipitation_16 = 
+  readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "2016 Precipitation!A2:B14") %>% 
+  na.omit() 
+
+precipitation_17 = 
+  readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "2017 Precipitation!A2:B14") %>% 
+  na.omit()
+
+
+#add a variable year
+precipitation_16 ["year"] = 2016
+precipitation_17 ["year"] = 2017
+
+#combine datasets and convert month to a character variable
+precipitation_combined = bind_rows(precipitation_16, precipitation_17) %>% 
+  mutate(Month = month.name[Month])
+```
+
+The Mr. Trash Wheel sheet in the given Excel file contains information related to each trash collection event from May 2014 to August 2017 in a harbor area. For all `r nrow(trash_data)` observations in Mr. Trash Wheel dataset, there listed information regarding the weight and volume of collected trash and its contents. Trash was categorized into plastic bottles, polystyrene, cigarette butts, glass bottles, grocery bags, chip bags and sports balls. The dataset also included the value (in number of homes powered) of how much electricity can be converted from the trash collected each time. \
+In average, there were `r mean(trash_data$weight_tons)` tons / `r mean(trash_data$volume_cubic_yards)` cubic yards of trash per collection. \
+
+The precipitation data for 2016 and 2017 summarised the monthly precipitation (in inches) in the two years. However, the values for 2017 September to December are not available given that this file was lastly updated on 2017-09-26. For the available precipitation data of 20 months, there was an average of `r mean(precipitation_combined$Total) ` inches every month. The lowest precipitation (`r max(precipitation_combined$Total)` inches) took place in October 2016  whereas the heaviest was `r max(precipitation_combined$Total)` inches in May 2017. \ 
+
+For the available data, the total precipitation in 2017 was `r sum(precipitation_17$Total)` till 2017-09-26.\
+The median number of sports balls in a dumpster in 2016 was `r median(trash_data$sports_balls)`
 
 
