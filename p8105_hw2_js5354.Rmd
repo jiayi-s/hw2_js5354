@@ -36,6 +36,7 @@ Now the dataset contains 1868 entries of 19 variables. However, the dataset is n
 ##Question 1
 Identifying number of stations:
 ```{r identifying number of stations}
+#identifying number of stations
 n_stations = nrow(distinct(transit_data, line, station_name))
 ```
 There are 465 distinct stations in this NYC transit dataset. 
@@ -44,6 +45,7 @@ There are 465 distinct stations in this NYC transit dataset.
 ##Question 2
 Identifying the number of stations with ADA:
 ```{r identifying the number of stations with ADA}
+#identifying the number of stations with ADA
 transit_data %>% 
   filter(ada == TRUE) %>% 
   distinct(line, station_name) %>% 
@@ -54,7 +56,7 @@ transit_data %>%
 ##Question 3
 Identifying proportion of station entrances / exits without vending allow entrance:
 ```{r identifying proportion of station entrances / exits without vending allow entrance}
-
+#identifying proportion of station entrances / exits without vending allow entrance
 transit_data %>% 
   filter (vending == "NO", entry == TRUE) %>% 
   distinct(line, station_name) %>% 
@@ -136,5 +138,30 @@ The precipitation data for 2016 and 2017 summarised the monthly precipitation (i
 
 For the available data, the total precipitation in 2017 was `r sum(precipitation_17$Total)` till 2017-09-26.\
 The median number of sports balls in a dumpster in 2016 was `r median(trash_data$sports_balls)`
+
+
+#Problem 3
+
+```{r install packages}
+# install.packages("devtools")
+devtools::install_github("p8105/p8105.datasets")
+
+#load data
+library(p8105.datasets)
+data(brfss_smart2010, package = "p8105.datasets")
+
+#tidy up dataset
+#focus on the “Overall Health” topic
+#exclude variables for class, topic, question, sample size, and everything from lower confidence limit to GeoLocation
+
+brfss_smart2010 = 
+  brfss_smart2010 %>% 
+  janitor::clean_names() %>% 
+  filter (topic == "Overall Health") %>% 
+  select (-class, -topic, - question, -sample_size, -(confidence_limit_low:geo_location)) %>% 
+  spread (key = response, value = data_value )
+  
+
+```
 
 
