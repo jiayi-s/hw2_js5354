@@ -15,7 +15,7 @@ library(ggplot2)
 #Problem 1
 Loading the NYC Transit Subway Entrance and Exit Data:
 
-```{r loading_NYC_transit_data}
+```{r loading_NYC_transit_data, results='hide'}
 
 #Load and clean the NYC Transit Subway Entrance and Exit Data
 
@@ -204,7 +204,8 @@ brfss_combined = rbind(brfss_Q, brfss_NY)
 
 #plot
 ggplot(brfss_combined, aes(x = year, y = excellent, color = locationdesc)) +
-  geom_point(alpha = .5)
+  geom_point(size = 4, alpha = .5) +
+  ylab('Proportion of Excellent response')
 
 ```
 
