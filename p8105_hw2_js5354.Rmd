@@ -24,7 +24,7 @@ transit_data =
   janitor::clean_names() %>% 
   select(line, station_name, station_latitude, station_longitude, route1:route11, entry, vending, entrance_type, ada)
 
-transit_data$entry = recode(transit_data$entry, "YES" = TRUE, "NO" =FALSE)
+transit_data$entry = recode(transit_data$entry, "YES" = TRUE, "NO" = FALSE)
 
 ```
 
@@ -61,11 +61,11 @@ Identifying proportion of station entrances / exits without vending allow entran
 transit_data %>% 
   filter (vending == "NO", entry == TRUE) %>% 
   distinct(line, station_name) %>% 
-  nrow() / n_stations
+  nrow() #/ n_stations
 transit_data %>% 
   filter (vending == "NO", entry == FALSE) %>% 
   distinct(line, station_name) %>% 
-  nrow() / n_stations
+  nrow() #/ n_stations
 ```
 There are 9.24% of total stations in this dataset have entrances without vending allow entrance and 14.62% have exit-only doors without vending.
 
@@ -97,11 +97,10 @@ Read and clean the Mr. Trash Wheel sheet:
 ```{r reading Excel file and initial cleaning}
 
 #reading Excel file and stroing into R environment
-trash_data = readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "Mr. Trash Wheel!A2:N258") %>% 
-  janitor::clean_names() 
-
 #omit rows that do not include dumpster-specific data
-trash_data = trash_data[!is.na(trash_data$dumpster), ]
+trash_data = readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "Mr. Trash Wheel!A2:N258") %>% 
+  janitor::clean_names() %>% 
+  filter(!is.na(dumpster))
 
 #rounds the number of sports balls to the nearest integer and converts the result to an integer variable 
 trash_data =
