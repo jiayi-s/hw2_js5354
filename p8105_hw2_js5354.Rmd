@@ -69,6 +69,7 @@ transit_data %>%
 ```
 There are 9.24% of total stations in this dataset have entrances without vending allow entrance and 14.62% have exit-only doors without vending.
 
+
 ##Question 4
 Reformat data so that route number and route name are distinct variables.
 ```{r reformat to separate route number and route name}
@@ -130,6 +131,7 @@ precipitation_17 ["year"] = 2017
 #combine datasets and convert month to a character variable
 precipitation_combined = bind_rows(precipitation_16, precipitation_17) %>% 
   mutate(Month = month.name[Month])
+
 ```
 
 The Mr. Trash Wheel sheet in the given Excel file contains information related to each trash collection event from May 2014 to August 2017 in a harbor area. For all `r nrow(trash_data)` observations in Mr. Trash Wheel dataset, there listed information regarding the weight and volume of collected trash and its contents. Trash was categorized into plastic bottles, polystyrene, cigarette butts, glass bottles, grocery bags, chip bags and sports balls. The dataset also included the value (in number of homes powered) of how much electricity can be converted from the trash collected each time. \
@@ -138,7 +140,7 @@ In average, there were `r mean(trash_data$weight_tons)` tons / `r mean(trash_dat
 The precipitation data for 2016 and 2017 summarised the monthly precipitation (in inches) in the two years. However, the values for 2017 September to December are not available given that this file was lastly updated on 2017-09-26. For the available precipitation data of 20 months, there was an average of `r mean(precipitation_combined$Total) ` inches every month. The lowest precipitation (`r max(precipitation_combined$Total)` inches) took place in October 2016  whereas the heaviest was `r max(precipitation_combined$Total)` inches in May 2017. \ 
 
 For the available data, the total precipitation in 2017 was `r sum(precipitation_17$Total)` till 2017-09-26.\
-The median number of sports balls in a dumpster in 2016 was `r median(trash_data$sports_balls)`
+The median number of sports balls in a dumpster in 2016 was `r median ((filter(trash_data, year ==2016))$sports_balls)`.
 
 
 #Problem 3
@@ -165,8 +167,8 @@ brfss_smart2010 =
   janitor::clean_names()
   
 #showing the proportion of responses that were “Excellent” or “Very Good”
-prop_excellent = mean(brfss_smart2010$excellent, na.rm = TRUE)
-prop_very_good = mean(brfss_smart2010$very_good, na.rm = TRUE)
+brfss_smart2010 = brfss_smart2010 %>% 
+  mutate (excellent_or_verygood = excellent + very_good)
 ```
 
 ```{r questions related to BRFSS data}
@@ -176,7 +178,7 @@ nrow(distinct(brfss_smart2010, locationdesc))
 #number of states present in the dataset
 nrow(distinct(brfss_smart2010, locationabbr))
 
-#What state is observed the most?
+#Count occurence of each subject in variable locationabbr. 
 count_(brfss_smart2010, 'locationabbr', sort = TRUE)
 ```
 
