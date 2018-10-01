@@ -37,7 +37,7 @@ Now the dataset contains 1868 entries of 19 variables. However, the dataset is n
 Identifying number of stations:
 ```{r identifying number of stations}
 #identifying number of stations
-n_stations = nrow(distinct(transit_data, line, station_name))
+nrow(distinct(transit_data, line, station_name))
 ```
 There are 465 distinct stations in this NYC transit dataset. 
 
@@ -56,15 +56,18 @@ transit_data %>%
 ##Question 3
 Identifying proportion of station entrances / exits without vending allow entrance:
 ```{r identifying proportion of station entrances / exits without vending allow entrance}
+
 #identifying proportion of station entrances / exits without vending allow entrance
-transit_data %>% 
+ 
+numerator = transit_data %>% 
   filter (vending == "NO", entry == TRUE) %>% 
-  distinct(line, station_name) %>% 
-  nrow() #/ n_stations
-transit_data %>% 
-  filter (vending == "NO", entry == FALSE) %>% 
-  distinct(line, station_name) %>% 
-  nrow() #/ n_stations
+  nrow() 
+denominator = transit_data %>% 
+  filter (vending == "NO") %>% 
+  nrow() 
+
+prop_entrance = numerator / denominator
+
 ```
 There are 9.24% of total stations in this dataset have entrances without vending allow entrance and 14.62% have exit-only doors without vending.
 
@@ -205,7 +208,8 @@ brfss_combined = rbind(brfss_Q, brfss_NY)
 #plot
 ggplot(brfss_combined, aes(x = year, y = excellent, color = locationdesc)) +
   geom_point(size = 4, alpha = .5) +
-  ylab('Proportion of Excellent response')
+  geom_smooth(se = FALSE)
+  +ylab('Proportion of Excellent response')
 
 ```
 
