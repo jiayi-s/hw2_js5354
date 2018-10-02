@@ -23,7 +23,8 @@ transit_data =
   read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
   janitor::clean_names() %>% 
   select(line, station_name, station_latitude, station_longitude, route1:route11, entry, vending, entrance_type, ada) %>% 
-  mutate(entry = recode(entry, "YES" = TRUE, "NO" = FALSE))
+  mutate(entry = recode(entry, "YES" = TRUE, "NO" = FALSE)) 
+
 
 ```
 
@@ -69,7 +70,7 @@ denominator = transit_data %>%
 prop_entrance = numerator / denominator
 
 ```
-There are 9.24% of total stations in this dataset have entrances without vending allow entrance and 14.62% have exit-only doors without vending.
+There are `r prop_entrance*100`% of station entrances / exits without vending have entrance. 
 
 
 ##Question 4
@@ -109,6 +110,9 @@ trash_data =
   trash_data %>% 
   mutate(sports_balls = round(sports_balls, digits = 0)) %>% 
   mutate(sports_balls = as.integer(sports_balls))
+
+#Fill the NAs in variable "year" with corresponding value.  
+trash_data$year [is.na(trash_data$year)] = 2017
 ```
 
 Read and clean precipitation data for 2016 and 2017. 
