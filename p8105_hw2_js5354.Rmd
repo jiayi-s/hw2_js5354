@@ -78,8 +78,11 @@ Reformat data so that route number and route name are distinct variables.
 ```{r reformat to separate route number and route name}
 
 #reformat to separate route number and route name
+#then clean up route number 
 reformed_data = transit_data %>% 
-  gather(key = "route_number", value = "route_name", route1:route11)
+  gather(key = "route_number", value = "route_name", route1:route11) %>% 
+  separate (route_number, into = c("remove", "route_num"), sep = 5) %>% 
+  select (-remove)
 
 #identifying the number distinct stations serve the A train.
 reformed_data %>% 
@@ -145,7 +148,7 @@ In average, there were `r mean(trash_data$weight_tons)` tons / `r mean(trash_dat
 The precipitation data for 2016 and 2017 summarised the monthly precipitation (in inches) in the two years. However, the values for 2017 September to December are not available given that this file was lastly updated on 2017-09-26. For the available precipitation data of 20 months, there was an average of `r mean(precipitation_combined$Total) ` inches every month. The lowest precipitation (`r max(precipitation_combined$Total)` inches) took place in October 2016  whereas the heaviest was `r max(precipitation_combined$Total)` inches in May 2017. \ 
 
 For the available data, the total precipitation in 2017 was `r sum(precipitation_17$Total)` till 2017-09-26.\
-The median number of sports balls in a dumpster in 2016 was `r median ((filter(trash_data, year ==2016))$sports_balls)`.
+The median number of sports balls in a dumpster in 2016 was `r median ((filter(trash_data, year == 2016))$sports_balls)`.
 
 
 #Problem 3
@@ -211,9 +214,8 @@ brfss_combined = rbind(brfss_Q, brfss_NY)
 
 #plot
 ggplot(brfss_combined, aes(x = year, y = excellent, color = locationdesc)) +
-  geom_point(size = 4, alpha = .5) +
-  geom_smooth(se = FALSE)
-  +ylab('Proportion of Excellent response')
+  geom_point(size = 4, alpha = .5)+
+  ylab('Proportion of Excellent response')
 
 ```
 
