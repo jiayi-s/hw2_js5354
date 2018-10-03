@@ -190,7 +190,7 @@ nrow(distinct(brfss_smart2010, locationabbr))
 count_(brfss_smart2010, 'locationabbr', sort = TRUE)
 ```
 
-In this specific dataset, there are 404 unique locations, covering all 51 states in the US. The most observed state is NJ with 146 relevant entries. \
+In this specific dataset, there are `r nrow(distinct(brfss_smart2010, locationdesc))` unique locations, covering all 51 states in the US. The most observed state is NJ with 146 related entries. \
 
 ```{r questions related to 2002 data}
 #In 2002, what is the median of the “Excellent” response value?
