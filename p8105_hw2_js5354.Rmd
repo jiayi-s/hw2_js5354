@@ -13,7 +13,6 @@ library(ggplot2)
 ```
 
 #Problem 1
-Loading the NYC Transit Subway Entrance and Exit Data:
 
 ```{r loading_NYC_transit_data, results='hide'}
 
@@ -28,23 +27,25 @@ transit_data =
 
 ```
 
-This CSV file contains information related to some subway stations in NYC, including which line each station is for, the name of each station, the geographic coordinates of each station as well as its entrance(s), what is the N-S and W-E street that this station is located at, which route(s) each station serves, whether there is free crossover / vending entries / stuffing / ADA compliance facilitated with any station, whether the station has any entrance or it is exit only as well as the type of entrance. \
+  This CSV file contains information related to subway stations in NYC, including which line each station is for, the name of each station, the geographic coordinates of each station as well as its entrance(s) / exit(s), name of N-S and W-E street that each station is located at, which route(s) each station serves, whether there is free crossover / vending entries / stuffing / ADA compliance facilitated with any station, whether the station has any entrance or it is exit only as well as the type of entrance. \
 \
-So far the csv file has been loaded and stored to `transit_data`; each column name has been transformed into lowercase letters with underscores in between; information with respect to line, station, name, station coordinates, routes served, entry, vending, entrance type, and ADA compliance have been retained. Then type of `entry` variables has been coerced into logical variables.\
+
+  So far the csv file has been loaded and stored to `transit_data`; each column name has been transformed into lowercase letters with underscores in between; information with respect to line, station, name, station coordinates, routes served, entry, vending, entrance type, and ADA compliance have been retained. Then type of `entry` variables has been coerced into logical variables.\
 \
-Now the dataset contains 1868 entries of 19 variables. However, the dataset is not tidy enough. Especially there are a lot of "NA"s in column `route1:11`, which unnecessarily widens the data spreadsheet.
+
+  Now the dataset contains `r dim(transit_data)[1]` entries of `r dim(transit_data)[2]` variables. However, the dataset is not tidy enough. Especially there are a lot of "NA"s in column `route1:11`, which unnecessarily widens the data spreadsheet.
 
 ##Question 1
-Identifying number of stations:
+
 ```{r identifying number of stations}
 #identifying number of stations
 nrow(distinct(transit_data, line, station_name))
 ```
-There are 465 distinct stations in this NYC transit dataset. 
+There are `r nrow(distinct(transit_data, line, station_name))` distinct stations in this NYC transit dataset. 
 
 
 ##Question 2
-Identifying the number of stations with ADA:
+
 ```{r identifying the number of stations with ADA}
 #identifying the number of stations with ADA
 transit_data %>% 
@@ -55,7 +56,7 @@ transit_data %>%
 84 stations are ADA compliant. 
 
 ##Question 3
-Identifying proportion of station entrances / exits without vending allow entrance:
+
 ```{r identifying proportion of station entrances / exits without vending allow entrance}
 
 #identifying proportion of station entrances / exits without vending allow entrance
@@ -74,7 +75,7 @@ There are `r prop_entrance*100`% of station entrances / exits without vending ha
 
 
 ##Question 4
-Reformat data so that route number and route name are distinct variables.
+
 ```{r reformat to separate route number and route name}
 
 #reformat to separate route number and route name
@@ -104,7 +105,7 @@ Read and clean the Mr. Trash Wheel sheet:
 
 #reading Excel file and stroing into R environment
 #omit rows that do not include dumpster-specific data
-trash_data = readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "Mr. Trash Wheel!A2:N258") %>% 
+trash_data = readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", range = "Mr. Trash Wheel!A2:N338") %>% 
   janitor::clean_names() %>% 
   filter(!is.na(dumpster))
 
@@ -124,11 +125,11 @@ Read and clean precipitation data for 2016 and 2017.
 #read precipitation data for 2016 and 2017 and omit rows without precipitation data
 
 precipitation_16 = 
-  readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "2016 Precipitation!A2:B14") %>% 
+  readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", range = "2016 Precipitation!A2:B14") %>% 
   na.omit() 
 
 precipitation_17 = 
-  readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", range = "2017 Precipitation!A2:B14") %>% 
+  readxl::read_xlsx("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", range = "2017 Precipitation!A2:B14") %>% 
   na.omit()
 
 
@@ -142,12 +143,12 @@ precipitation_combined = bind_rows(precipitation_16, precipitation_17) %>%
 
 ```
 
-The Mr. Trash Wheel sheet in the given Excel file contains information related to each trash collection event from May 2014 to August 2017 in a harbor area. For all `r nrow(trash_data)` observations in Mr. Trash Wheel dataset, there listed information regarding the weight and volume of collected trash and its contents. Trash was categorized into plastic bottles, polystyrene, cigarette butts, glass bottles, grocery bags, chip bags and sports balls. The dataset also included the value (in number of homes powered) of how much electricity can be converted from the trash collected each time. \
+The Mr. Trash Wheel sheet in the given Excel file contains information related to each trash collection event from May 2014 to July 2018 in a harbor area. For all `r nrow(trash_data)` observations in Mr. Trash Wheel dataset, there listed information regarding the weight and volume of collected trash and its contents. Trash was categorized into plastic bottles, polystyrene, cigarette butts, glass bottles, grocery bags, chip bags and sports balls. The dataset also included the value (in number of homes powered) of how much electricity can be converted from the trash collected each time. \
 In average, there were `r mean(trash_data$weight_tons)` tons / `r mean(trash_data$volume_cubic_yards)` cubic yards of trash per collection. \
 
-The precipitation data for 2016 and 2017 summarised the monthly precipitation (in inches) in the two years. However, the values for 2017 September to December are not available given that this file was lastly updated on 2017-09-26. For the available precipitation data of 20 months, there was an average of `r mean(precipitation_combined$Total) ` inches every month. The lowest precipitation (`r max(precipitation_combined$Total)` inches) took place in October 2016  whereas the heaviest was `r max(precipitation_combined$Total)` inches in May 2017. \ 
+The precipitation data for 2016 and 2017 summarised the monthly precipitation (in inches) in the two years. There was an average precipitation of `r mean(precipitation_combined$Total) ` inches every month over these two years. The lowest precipitation (`r max(precipitation_combined$Total)` inches) took place in October 2016  whereas the heaviest was `r max(precipitation_combined$Total)` inches in May 2017. \ 
 
-For the available data, the total precipitation in 2017 was `r sum(precipitation_17$Total)` till 2017-09-26.\
+For the available data, the total precipitation in 2017 was `r sum(precipitation_17$Total)`.\
 The median number of sports balls in a dumpster in 2016 was `r median ((filter(trash_data, year == 2016))$sports_balls)`.
 
 
