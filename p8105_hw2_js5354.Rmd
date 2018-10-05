@@ -145,6 +145,7 @@ precipitation_combined = bind_rows(precipitation_16, precipitation_17) %>%
 
 The Mr. Trash Wheel sheet in the given Excel file contains information related to each trash collection event from May 2014 to July 2018 in a harbor area. For all `r nrow(trash_data)` observations in Mr. Trash Wheel dataset, there listed information regarding the weight and volume of collected trash and its contents. Trash was categorized into plastic bottles, polystyrene, cigarette butts, glass bottles, grocery bags, chip bags and sports balls. The dataset also included the value (in number of homes powered) of how much electricity can be converted from the trash collected each time. \
   
+  
 In average, there were `r mean(trash_data$weight_tons)` tons / `r mean(trash_data$volume_cubic_yards)` cubic yards of trash per collection. \
   
 
